@@ -24,4 +24,8 @@ public class Product {
     @Column(name = "name")
     private String name;
 
+    public Product(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }
