@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 import ru.education.entity.SalesPeriodJdbcDemo;
-import ru.education.entity.SalesPeriodJpaDemo;
+import ru.education.entity.SalesPeriod;
 import ru.education.jdbc.SalesPeriodJdbcRepository;
 import ru.education.entity.Product;
 import ru.education.jpa.ProductRepository;
@@ -67,11 +67,11 @@ public class TestController {
         return salesPeriodJdbcRepository.getProductsWithActivePeriod();}
 
     @GetMapping("/sales/jpa")
-    public List<SalesPeriodJpaDemo> getSalesPeriodsJpa() {return salesPeriodRepository.findAll();}
+    public List<SalesPeriod> getSalesPeriodsJpa() {return salesPeriodRepository.findAll();}
 
     @PostMapping("/sales/jpa")
-    public SalesPeriodJpaDemo addSalesPeriodsJpa(@RequestBody SalesPeriodJpaDemo salesPeriodJpaDemo) {
-        return salesPeriodRepository.save(salesPeriodJpaDemo);}
+    public SalesPeriod addSalesPeriodsJpa(@RequestBody SalesPeriod salesPeriod) {
+        return salesPeriodRepository.save(salesPeriod);}
 
     @GetMapping("/sales/jpa/max/price")
     public Integer getMaxPriceByProductId() {return salesPeriodRepository.getMaxPriceByProductId(1);}
@@ -80,8 +80,8 @@ public class TestController {
     public boolean existsByPrice() {return salesPeriodRepository.existsByPrice(60);}
 
     @GetMapping("/sales/jpa/active")
-    public List<SalesPeriodJpaDemo> findByDateToIsNull() {return salesPeriodRepository.findByDateToIsNull();}
+    public List<SalesPeriod> findByDateToIsNull() {return salesPeriodRepository.findByDateToIsNull();}
 
     @GetMapping("/sales/jpa/byproductname")
-    public List<SalesPeriodJpaDemo> findByProductName() {return salesPeriodRepository.findByProductName("bycicle");}
+    public List<SalesPeriod> findByProductName() {return salesPeriodRepository.findByProductName("bycicle");}
 }

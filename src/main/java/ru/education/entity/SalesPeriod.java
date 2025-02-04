@@ -12,7 +12,9 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-public class SalesPeriodJpaDemo {
+public class SalesPeriod {
+
+    public static String TYPE_NAME = "Торговый период";
 
     @Id
     @Column(name = "id", nullable = false)
@@ -32,4 +34,44 @@ public class SalesPeriodJpaDemo {
     @OneToOne
     @JoinColumn(name = "product", referencedColumnName = "id", nullable = false)
     private Product product;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getPrice() {
+        return price;
+    }
+
+    public void setPrice(long price) {
+        this.price = price;
+    }
+
+    public Date getDateFrom() {
+        return dateFrom;
+    }
+
+    public void setDateFrom(Date dateFrom) {
+        this.dateFrom = dateFrom;
+    }
+
+    public Date getDateTo() {
+        return dateTo;
+    }
+
+    public void setDateTo(Date dateTo) {
+        this.dateTo = dateTo;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 }
