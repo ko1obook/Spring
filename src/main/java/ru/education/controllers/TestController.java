@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.education.entity.SalesPeriodJdbcDemo;
 import ru.education.entity.SalesPeriodJpaDemo;
 import ru.education.jdbc.SalesPeriodJdbcRepository;
-import ru.education.jpa.Product;
+import ru.education.entity.Product;
 import ru.education.jpa.ProductRepository;
 import ru.education.jpa.SalesPeriodRepository;
 import ru.education.model.Formatter;

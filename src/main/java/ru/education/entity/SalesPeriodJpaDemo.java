@@ -3,7 +3,6 @@ package ru.education.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.education.jpa.Product;
 
 import javax.persistence.*;
 import java.util.Date;

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.education.entity.SalesPeriodJdbcDemo;
-import ru.education.jpa.Product;
+import ru.education.entity.Product;
 
 import java.util.List;
 

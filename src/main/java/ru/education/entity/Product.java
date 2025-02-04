@@ -1,4 +1,4 @@
-package ru.education.jpa;
+package ru.education.entity;
 
 
 import lombok.Getter;
