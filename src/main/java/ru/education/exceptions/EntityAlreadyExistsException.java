@@ -19,6 +19,6 @@ public class EntityAlreadyExistsException extends BaseException {
         Assert.hasText(type, "Тип не может быть пустым");
         Assert.notNull(id, "Идентификатор не может быть null");
         Assert.hasText(id.toString(), "Идентификатор не может быть пустым");
-        return String.format("%s с ключом $s уже существует", type, id);
+        return String.format("%s с ключом %s уже существует", type, id);
     }
 }

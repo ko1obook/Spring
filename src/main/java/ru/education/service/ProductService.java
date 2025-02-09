@@ -1,77 +1,18 @@
 package ru.education.service;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import ru.education.entity.Product;
-import ru.education.entity.SalesPeriod;
-import ru.education.exceptions.EntityAlreadyExistsException;
-import ru.education.exceptions.EntityHasDetailsException;
-import ru.education.exceptions.EntityIllegalArgumentException;
-import ru.education.exceptions.EntityNotFoundException;
-import ru.education.jpa.ProductRepository;
-import ru.education.jpa.SalesPeriodRepository;
 
 import java.util.List;
 
-@Service
-public class ProductService {
+public interface ProductService {
 
-    private final ProductRepository productRepository;
+    List<Product> findAll();
 
-    private final SalesPeriodRepository salesPeriodRepository;
+    Product findById(Object id);
 
-    @Autowired
-    public ProductService(ProductRepository productRepository, SalesPeriodRepository salesPeriodRepository) {
-        this.productRepository = productRepository;
-        this.salesPeriodRepository = salesPeriodRepository;
-    }
+    Product create(Product product);
 
-    public List<Product> findAll() {
-        return productRepository.findAll();
-    }
+    Product update(Product product);
 
-    public Product findById(Object id) {
-        Product product;
-        if (id == null) {
-            throw new EntityIllegalArgumentException("Идентификатор объекта не может быть null");
-        }
-        Integer parsedId;
-        try {
-            parsedId = Integer.valueOf((String) id);
-        } catch (NumberFormatException ex) {
-            throw new EntityIllegalArgumentException(String.format("Не удалось преобразовать идентификатор" +
-                    "к нужному типу, текст ошибки: %s", ex));
-        }
-
-        product = productRepository.findById(parsedId).orElse(null);
-
-        if (product == null) {
-            throw new EntityNotFoundException(Product.TYPE_NAME, parsedId);
-        }
-        return product;
-    }
-
-    public Product create(Product product) {
-        if (product == null) {
-            throw new EntityIllegalArgumentException("Создаваемый объект не может быть null");
-        }
-        if (product.getId() == null) {
-            throw new EntityIllegalArgumentException("Идентификатор объекта не может быть null");
-        }
-        Product existedProduct = productRepository.findById(product.getId()).orElse(null);
-        if (existedProduct != null) {
-            throw new EntityAlreadyExistsException(Product.TYPE_NAME, product.getId());
-        }
-        return productRepository.save(product);
-    }
-
-    public void delete(Object id) {
-        Product product = findById(id);
-        List<SalesPeriod> salesPeriods = salesPeriodRepository.findByProduct(product);
-        if (salesPeriods.size() > 0) {
-            throw new EntityHasDetailsException(SalesPeriod.TYPE_NAME, product.getId());
-        }
-        productRepository.deleteById(product.getId());
-    }
+    void delete(Object id);
 }
