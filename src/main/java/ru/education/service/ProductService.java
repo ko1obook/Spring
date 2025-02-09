@@ -59,8 +59,8 @@ public class ProductService {
         if (product.getId() == null) {
             throw new EntityIllegalArgumentException("Идентификатор объекта не может быть null");
         }
-        Product existedProduct = productRepository.findById(product.getId()).get();
-        if (existedProduct == null) {
+        Product existedProduct = productRepository.findById(product.getId()).orElse(null);
+        if (existedProduct != null) {
             throw new EntityAlreadyExistsException(Product.TYPE_NAME, product.getId());
         }
         return productRepository.save(product);

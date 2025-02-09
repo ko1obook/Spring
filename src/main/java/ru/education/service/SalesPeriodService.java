@@ -25,7 +25,7 @@ public class SalesPeriodService {
         this.productRepository = productRepository;
     }
 
-    List<SalesPeriod> findAll() {
+    public List<SalesPeriod> findAll() {
         return salesPeriodRepository.findAll();
     }
 

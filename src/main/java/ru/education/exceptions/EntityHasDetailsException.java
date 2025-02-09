@@ -19,6 +19,6 @@ public class EntityHasDetailsException extends BaseException {
         Assert.hasText(type, "Тип не может быть пустым");
         Assert.notNull(id, "Идентификатор не может быть null");
         Assert.hasText(id.toString(), "Идентификатор не может быть пустым");
-        return String.format("%s ссылается  на удаляемый объект с идентификатором $s ", type, id);
+        return String.format("%s ссылается на удаляемый объект с идентификатором $s ", type, id);
     }
 }
