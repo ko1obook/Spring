@@ -14,10 +14,9 @@ import ru.education.controllers.ProductController;
 import ru.education.entity.Product;
 import service.mock.MockProductService;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {ProductController.class, MockProductService.class})
@@ -50,5 +49,21 @@ public class ProductControllerTest {
         mockMvc.perform(post(URL).contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(requestJson))
                 .andExpect(status().isCreated());
+    }
+
+    public void updateTest() throws Exception {
+        // Обновляем продукт с несуществующим id
+        Product product = new Product(3333, "bus");
+        String requestJson = mapper.writeValueAsString(product);
+        mockMvc.perform(put(URL)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(requestJson))
+                .andExpect(status().isOk());
+    }
+
+    public void deleteTest() throws Exception {
+        // Удаляем созданный продукт updateTest
+        mockMvc.perform(delete(URL + "/3333"))
+                .andExpect(status().isNoContent());
     }
 }

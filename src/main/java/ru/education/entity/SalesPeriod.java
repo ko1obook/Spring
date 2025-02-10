@@ -46,10 +46,6 @@ public class SalesPeriod {
         this.id = id;
     }
 
-    public long getPrice() {
-        return price;
-    }
-
     public void setPrice(Long price) {
         this.price = price;
     }

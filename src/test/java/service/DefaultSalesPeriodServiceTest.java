@@ -16,7 +16,7 @@ import ru.education.exceptions.EntityIllegalArgumentException;
 import ru.education.exceptions.EntityNotFoundException;
 import ru.education.jpa.ProductRepository;
 import ru.education.jpa.SalesPeriodRepository;
-import ru.education.service.SalesPeriodService;
+import ru.education.service.impl.DefaultSalesPeriodService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
@@ -27,10 +27,10 @@ import java.util.List;
 @SpringBootTest
 @ContextConfiguration(classes = TestConfig.class)
 @Transactional
-public class SalesPeriodServiceTest {
+public class DefaultSalesPeriodServiceTest {
 
     @Autowired
-    private SalesPeriodService salesPeriodService;
+    private DefaultSalesPeriodService defaultSalesPeriodService;
 
     @Autowired
     private ProductRepository productRepository;
@@ -41,7 +41,7 @@ public class SalesPeriodServiceTest {
     @Test
     public void findAllTest() {
         // Если в тестовой БД торговых периодов нет, список может быть пустым.
-        List<SalesPeriod> salesPeriods = salesPeriodService.findAll();
+        List<SalesPeriod> salesPeriods = defaultSalesPeriodService.findAll();
         Assert.assertNotNull(salesPeriods);
     }
 
@@ -57,29 +57,29 @@ public class SalesPeriodServiceTest {
         sp.setDateFrom(new Date());
         salesPeriodRepository.save(sp);
 
-        SalesPeriod found = salesPeriodService.findById("200");
+        SalesPeriod found = defaultSalesPeriodService.findById("200");
         Assert.assertNotNull(found);
         Assert.assertEquals(Long.valueOf(200), found.getId());
     }
 
     @Test(expected = EntityIllegalArgumentException.class)
     public void findByIdNullTest() {
-        salesPeriodService.findById(null);
+        defaultSalesPeriodService.findById(null);
     }
 
     @Test(expected = EntityIllegalArgumentException.class)
     public void findByIdNotNumericTest() {
-        salesPeriodService.findById("abc");
+        defaultSalesPeriodService.findById("abc");
     }
 
     @Test(expected = EntityNotFoundException.class)
     public void findByIdNotFoundTest() {
-        salesPeriodService.findById("6666");
+        defaultSalesPeriodService.findById("6666");
     }
 
     @Test(expected = EntityIllegalArgumentException.class)
     public void createNullSalesPeriodException() {
-        salesPeriodService.create(null);
+        defaultSalesPeriodService.create(null);
     }
 
     @Test(expected = EntityIllegalArgumentException.class)
@@ -92,7 +92,7 @@ public class SalesPeriodServiceTest {
         sp.setProduct(product);
         sp.setDateFrom(new Date());
 
-        salesPeriodService.create(sp);
+        defaultSalesPeriodService.create(sp);
     }
 
     @Test(expected = EntityIllegalArgumentException.class)
@@ -100,7 +100,7 @@ public class SalesPeriodServiceTest {
         SalesPeriod sp = new SalesPeriod();
         sp.setId(300L);
         sp.setProduct(null);
-        salesPeriodService.create(sp);
+        defaultSalesPeriodService.create(sp);
     }
 
     @Test(expected = EntityIllegalArgumentException.class)
@@ -110,7 +110,7 @@ public class SalesPeriodServiceTest {
         Product product = new Product();
         product.setId(null);
         sp.setProduct(product);
-        salesPeriodService.create(sp);
+        defaultSalesPeriodService.create(sp);
     }
 
     @Test(expected = EntityIllegalArgumentException.class)
@@ -121,7 +121,7 @@ public class SalesPeriodServiceTest {
         product.setId(5555); // Данный продукт отсутствует
         sp.setProduct(product);
         sp.setDateFrom(new Date());
-        salesPeriodService.create(sp);
+        defaultSalesPeriodService.create(sp);
     }
 
     @Test(expected = EntityIllegalArgumentException.class)
@@ -132,7 +132,7 @@ public class SalesPeriodServiceTest {
         sp.setId(303L);
         sp.setProduct(product);
         sp.setDateFrom(null);
-        salesPeriodService.create(sp);
+        defaultSalesPeriodService.create(sp);
     }
 
     @Test(expected = EntityAlreadyExistsException.class)
@@ -149,7 +149,7 @@ public class SalesPeriodServiceTest {
         spDuplicate.setId(304L);
         spDuplicate.setProduct(product);
         spDuplicate.setDateFrom(new Date());
-        salesPeriodService.create(spDuplicate);
+        defaultSalesPeriodService.create(spDuplicate);
     }
 
     @Test(expected = EntityConflictException.class)
@@ -169,7 +169,7 @@ public class SalesPeriodServiceTest {
         spNew.setProduct(product);
         spNew.setDateFrom(new Date());
         spNew.setDateTo(java.sql.Date.valueOf(LocalDate.now().plusDays(10)));
-        salesPeriodService.create(spNew);
+        defaultSalesPeriodService.create(spNew);
     }
 
     @Test
@@ -190,7 +190,7 @@ public class SalesPeriodServiceTest {
         sp.setProduct(product);
         sp.setDateFrom(new Date());
         sp.setDateTo(java.sql.Date.valueOf(LocalDate.now().plusDays(10)));
-        SalesPeriod created = salesPeriodService.create(sp);
+        SalesPeriod created = defaultSalesPeriodService.create(sp);
         Assert.assertNotNull(created);
         Assert.assertEquals(Long.valueOf(307), created.getId());
     }
@@ -207,10 +207,10 @@ public class SalesPeriodServiceTest {
         sp.setDateFrom(new Date());
         salesPeriodRepository.save(sp);
 
-        salesPeriodService.delete("308");
+        defaultSalesPeriodService.delete("308");
 
         try {
-            salesPeriodService.findById("308");
+            defaultSalesPeriodService.findById("308");
             Assert.fail("Ожидалось исключение EntityNotFoundException");
         } catch (EntityNotFoundException ex) {
             // исключение ожидается
