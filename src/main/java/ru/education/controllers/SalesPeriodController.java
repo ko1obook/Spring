@@ -38,6 +38,12 @@ public class SalesPeriodController {
         return defaultSalesPeriodService.create(salesPeriod);
     }
 
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public SalesPeriod update(@RequestBody SalesPeriod salesPeriod) {
+        return defaultSalesPeriodService.update(salesPeriod);
+    }
+
     // Удаление торгового периода
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

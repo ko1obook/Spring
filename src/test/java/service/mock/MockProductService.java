@@ -22,8 +22,7 @@ public class MockProductService implements ProductService {
 
     @Override
     public Product create(Product product) {
-        return product;
-    }
+        return product;}
 
     @Override
     public Product update(Product product) {

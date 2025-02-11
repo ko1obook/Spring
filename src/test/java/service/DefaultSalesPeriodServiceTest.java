@@ -16,10 +16,12 @@ import ru.education.exceptions.EntityIllegalArgumentException;
 import ru.education.exceptions.EntityNotFoundException;
 import ru.education.jpa.ProductRepository;
 import ru.education.jpa.SalesPeriodRepository;
+import ru.education.service.SalesPeriodService;
 import ru.education.service.impl.DefaultSalesPeriodService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -37,6 +39,8 @@ public class DefaultSalesPeriodServiceTest {
 
     @Autowired
     private SalesPeriodRepository salesPeriodRepository;
+    @Autowired
+    private SalesPeriodService salesPeriodService;
 
     @Test
     public void findAllTest() {
@@ -196,6 +200,87 @@ public class DefaultSalesPeriodServiceTest {
     }
 
     @Test
+    public void updateSalesPeriodSuccessTest() {
+        // Продукт с Id = 1 существует
+        Product product = productRepository.findById(1).orElse(null);
+        Assert.assertNotNull("Продукт с Id=1 должен суествовать", product);
+
+        // Создаём новый торговый период для обновления
+        SalesPeriod sp = new SalesPeriod();
+        sp.setProduct(product);
+        sp.setDateFrom(new Date());
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, 10);
+        sp.setDateTo(cal.getTime());
+        sp.setPrice(100L);
+        sp = salesPeriodRepository.save(sp);
+        Long spId = sp.getId();
+        Assert.assertNotNull(spId);
+
+        // Обновляем цену и дату окончания
+        SalesPeriod updateRequest = new SalesPeriod();
+        updateRequest.setId(spId);
+        updateRequest.setPrice(200L);
+        cal.add(Calendar.DAY_OF_YEAR, 5);
+        updateRequest.setDateTo(cal.getTime());
+        // product и DateFrom не передаём
+
+        SalesPeriod updateSp = salesPeriodService.update(updateRequest);
+        Assert.assertNotNull(updateSp);
+        Assert.assertEquals(spId, updateSp.getId());
+        Assert.assertEquals(Long.valueOf(200L), updateSp.getPrice());
+        Assert.assertEquals(updateRequest.getDateTo(), updateSp.getDateTo());
+        // product и DateFrom должны остаться прежними
+        Assert.assertEquals(product.getId(), updateSp.getProduct().getId());
+        Assert.assertEquals(sp.getDateFrom(), updateSp.getDateFrom());
+    }
+
+    @Test(expected = EntityIllegalArgumentException.class)
+    public void updateSalesPeriodNullTest() {
+        salesPeriodService.update(null);
+    }
+
+    @Test(expected = EntityIllegalArgumentException.class)
+    public void updateSalesPeriodWithNullTest() {
+        SalesPeriod sp = new SalesPeriod();
+        sp.setId(null);
+        salesPeriodService.update(sp);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void updateNonExisingSalesPeriodTest() {
+        SalesPeriod sp = new SalesPeriod();
+        sp.setId(1111L); // Торговый период с таким Id отсутствует
+        salesPeriodService.update(sp);
+    }
+
+    @Test(expected = EntityIllegalArgumentException.class)
+    public void updateSalesPeriodWithInvalidProductTest() {
+        // Создаём торговый период
+        Product product = productRepository.findById(1).orElse(null);
+        Assert.assertNotNull("Продукт с id=1 должен существовать", product);
+        SalesPeriod sp = new SalesPeriod();
+        sp.setProduct(product);
+        sp.setDateFrom(new Date());
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, 10);
+        sp.setDateTo(cal.getTime());
+        sp.setPrice(300L);
+        sp = salesPeriodRepository.save(sp);
+        Long spId = sp.getId();
+        Assert.assertNotNull(spId);
+
+        // Готовим обновление с неверным объектом Product (id = null)
+        SalesPeriod updateRequest = new SalesPeriod();
+        updateRequest.setId(spId);
+        Product invalidProduct = new Product();
+        invalidProduct.setId(null);
+        updateRequest.setProduct(invalidProduct);
+
+        salesPeriodService.update(updateRequest);
+    }
+
+    @Test
     public void deleteSalesPeriod() {
         // Создаём торговый период, а затем удаляем его
         Product product = productRepository.findById(1).orElse(null);
@@ -217,6 +302,9 @@ public class DefaultSalesPeriodServiceTest {
         }
     }
 }
+
+
+
 
 
 

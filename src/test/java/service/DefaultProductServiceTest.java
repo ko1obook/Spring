@@ -11,10 +11,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.education.entity.Product;
 import ru.education.entity.SalesPeriod;
 import ru.education.exceptions.EntityAlreadyExistsException;
+import ru.education.exceptions.EntityHasDetailsException;
 import ru.education.exceptions.EntityIllegalArgumentException;
 import ru.education.exceptions.EntityNotFoundException;
 import ru.education.jpa.ProductRepository;
 import ru.education.jpa.SalesPeriodRepository;
+import ru.education.service.ProductService;
 import ru.education.service.impl.DefaultProductService;
 
 import javax.transaction.Transactional;
@@ -35,6 +37,8 @@ public class DefaultProductServiceTest {
 
     @Autowired
     private SalesPeriodRepository salesPeriodRepository;
+    @Autowired
+    private ProductService productService;
 
     @Test
     public void findAllTest() {
@@ -96,6 +100,43 @@ public class DefaultProductServiceTest {
     }
 
     @Test
+    public void updateTest() {
+        // Продукт с id = 1 уже существует в тестовой БД
+        Product product = productService.findById("1");
+        String originalName = product.getName();
+
+        // Изменяем имя продукта
+        product.setName("Updated_transport");
+        Product updated = productService.update(product);
+
+        Assert.assertNotNull(updated);
+        Assert.assertEquals("Updated_transport", updated.getName());
+
+        // Возвращаем имя продукта к исходному
+        product.setName(originalName);
+        productService.update(product);
+    }
+
+    @Test(expected = EntityIllegalArgumentException.class)
+    public void updateNullProductTest() {
+        productService.update(null);
+    }
+
+    @Test(expected = EntityIllegalArgumentException.class)
+    public void updateProductWithNullIdTest() {
+        Product product = new Product();
+        product.setId(null);
+        productService.update(product);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void updateNonExistingProductTest() {
+        Product product = new Product();
+        product.setId(2222); // Такого Id нет
+        productService.update(product);
+    }
+
+    @Test
     public void deleteProductWithoutSalesPeriodsTest() {
         Product product = new Product();
         product.setId(3333);
@@ -110,7 +151,7 @@ public class DefaultProductServiceTest {
         }
     }
 
-
+    @Test(expected = EntityHasDetailsException.class)
     public void deleteProductWithSalesPeriodTest() {
         Product product = new Product();
         product.setId(4444);
