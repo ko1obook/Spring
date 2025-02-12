@@ -17,6 +17,7 @@ public class MockProductService implements ProductService {
 
     @Override
     public Product findById(Object id) {
+
         return new Product(Integer.valueOf((String) id), "testProduct");
     }
 
