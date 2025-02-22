@@ -15,7 +15,7 @@ public interface SalesPeriodRepository extends JpaRepository<SalesPeriod, Long> 
     @Query(value = "select max(price) from sales_period where product = :productId", nativeQuery = true)
     Integer getMaxPriceByProductId(@Param("productId") long productId);
 
-    boolean existsByPrice(long price);
+    boolean existsByPrice(Long price);
 
     List<SalesPeriod> findByDateToIsNull();
 

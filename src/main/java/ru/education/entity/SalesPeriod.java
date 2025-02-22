@@ -46,7 +46,7 @@ public class SalesPeriod {
         this.id = id;
     }
 
-    public long getPrice() {
+    public Long getPrice() {
         return price;
     }
 

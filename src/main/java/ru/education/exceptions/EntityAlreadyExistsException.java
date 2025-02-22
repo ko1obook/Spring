@@ -3,7 +3,7 @@ package ru.education.exceptions;
 import org.springframework.util.Assert;
 
 /**
- * Исключение выбрасывается при пвторном создании сущности с заданным ключом
+ * Исключение выбрасывается при повторном создании сущности с заданным ключом
  */
 public class EntityAlreadyExistsException extends BaseException {
 

@@ -77,7 +77,7 @@ public class TestController {
     public Integer getMaxPriceByProductId() {return salesPeriodRepository.getMaxPriceByProductId(1);}
 
     @GetMapping("/sales/jpa/exists/price")
-    public boolean existsByPrice() {return salesPeriodRepository.existsByPrice(60);}
+    public boolean existsByPrice() {return salesPeriodRepository.existsByPrice(60L);}
 
     @GetMapping("/sales/jpa/active")
     public List<SalesPeriod> findByDateToIsNull() {return salesPeriodRepository.findByDateToIsNull();}
